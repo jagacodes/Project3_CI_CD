@@ -150,7 +150,7 @@ jobs:
           root: ~/
           paths:
             - Project3_CI_CD/.circleci/ansible/inventory.txt
-      - when: on_fail:
+      - when: on_fail
       - destroy-environment
  
 workflows:
