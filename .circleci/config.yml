@@ -129,6 +129,7 @@ jobs:
             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
             --tags project=udapeople
+
       - run:
           name: Ensure front-end infrastructure exist
           command: 
@@ -150,10 +151,8 @@ jobs:
           root: ~/
           paths:
             - Project3_CI_CD/.circleci/ansible/inventory.txt
-      - run:  
-          command:
-            - when: on_fail
       - destroy-environment
+          
  
 workflows:
   default:
