@@ -148,7 +148,7 @@ jobs:
           paths:
             - Project3_CI_CD/.circleci/ansible/inventory.txt
       - destroy-environment
-          when_to_run: always
+          
           
  
 workflows:
