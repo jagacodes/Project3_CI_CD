@@ -123,7 +123,7 @@ jobs:
       - run: yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
-          command: 
+          command: |
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
@@ -150,8 +150,8 @@ jobs:
           root: ~/
           paths:
             - Project3_CI_CD/.circleci/ansible/inventory.txt
-      - when: on_fail
-          - destroy-environment
+      - when: on_fail:
+      - destroy-environment
  
 workflows:
   default:
