@@ -12,7 +12,7 @@ commands:
           name: Destroy environments
           command: |
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: << parameters.when_to_run >>
 jobs:
   build-frontend:
@@ -142,11 +142,11 @@ jobs:
             --filters \
             "Name=instance-state-name,Values=running" \
             --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-            --output text >> ~/Project3_CI_CD/.circleci/ansible/inventory.txt
-      - persist_to_workspace:
+            --output text >> inventory.txt
+      persist_to_workspace:
           root: ~/
           paths:
-            - Project3_CI_CD/.circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment
           
           
