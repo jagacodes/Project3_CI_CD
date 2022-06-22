@@ -146,8 +146,34 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - Project3_CI_CD/.circleci/ansible/inventory.txt
       - destroy-environment
+
+  
+  configure-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+            fingerprints: ["7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            yum update -y
+            yum install -y tar gzip
+            amazon-linux-extras install ansible2 -y
+            
+
+            
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            exit 1
+      # Here's where you will add some code to rollback on failure      
           
           
  
