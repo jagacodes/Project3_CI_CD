@@ -2,7 +2,7 @@
 
 - name: "update yum packages."
   become: true
-  dnf:
+  yum:
     update_cache: yes
 
 
@@ -13,7 +13,7 @@
 
 - name: "install NPM dependencies."
   become: true
-  dnf:
+  yum:
     name: 
       - nodejs
       - gcc-c++
