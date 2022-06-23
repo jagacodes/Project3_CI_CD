@@ -15,9 +15,6 @@ commands:
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: << parameters.when_to_run >>
-  
-  
- 
 jobs:
   build-frontend:
     docker:
@@ -114,6 +111,7 @@ jobs:
             npm audit fix --force
             npm audit --audit-level=critical
 
+  
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -150,8 +148,8 @@ jobs:
           paths:
             - .circleci/ansible/*
       - destroy-environment
-          
 
+  
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
@@ -160,25 +158,26 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - run:    
-          name: add ssh to image
-          command: apk add --update openssh-client git
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-            fingerprints: ["7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8"]
-      - attach_workspace:
-          at: .
+          fingerprints:
+            - '7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8'
       - run:
           name: Install dependencies
           command: |
             apk add --update --no-cache tar gzip ansible aws-cli
+      # attach workspace
+      - attach_workspace:
+          at: .
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml \
             --key-file ~/.ssh/id_rsa_7d27a10f082d138b202853862b1d4bc8
+      # Here's where you will add some code to rollback on failure
       - destroy-environment
+          
             
           
           
