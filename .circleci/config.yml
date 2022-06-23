@@ -155,6 +155,9 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - run:    
+          name: add ssh to image
+          command: apk add --update openssh-client git
       - add_ssh_keys:
             fingerprints: ["7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8"]
       - attach_workspace:
