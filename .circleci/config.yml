@@ -147,7 +147,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .circleci/ansible/inventory.txt
+            - .circleci/ansible/*
       - destroy-environment
 
   
@@ -166,7 +166,7 @@ jobs:
             amazon-linux-extras install ansible2 -y
             yum install ansible
       - attach_workspace:
-          at: .git      
+          at: .      
       - run:
           name: Configure server
           command: |
