@@ -15,6 +15,9 @@ commands:
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: << parameters.when_to_run >>
+  
+  
+ 
 jobs:
   build-frontend:
     docker:
@@ -111,7 +114,6 @@ jobs:
             npm audit fix --force
             npm audit --audit-level=critical
 
-  
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -122,19 +124,18 @@ jobs:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
-            --template-file .circleci/files/backend.yml \
-            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-            --tags project=udapeople
-
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+               --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
-            --template-file .circleci/files/frontend.yml \
-            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            --tags project=udapeople 
+              --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
+               --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
+               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -142,43 +143,44 @@ jobs:
             --region us-east-1 \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> .circleci/ansible/inventory.txt
+            --output text) >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - .circleci/ansible/*
+            - .circleci/ansible/inventory.txt
+      # Here's where you will add some code to rollback on failure
       - destroy-environment
+          
 
-  
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      # Docker image here that supports Ansible
+      - image: python:3.10-alpine3.16
+      # - image: amazon/aws-cli
     steps:
+      # Checkout code from git
       - checkout
       - run:    
           name: add ssh to image
           command: apk add --update openssh-client git
+      # Add ssh keys with fingerprint
       - add_ssh_keys:
             fingerprints: ["7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8"]
       - attach_workspace:
-          at: . 
-      - run: 
-          name: View content of inventory.txt
-          command: cat .circleci/ansible/inventory.txt
+          at: .
       - run:
-          name: Install dependencies for Ansible Playbook
+          name: Install dependencies
           command: |
-            apk add --update ansible
-            pip install awscli
-            aws --version
-           
+            apk add --update --no-cache tar gzip ansible aws-cli
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml \
             --key-file ~/.ssh/id_rsa_7d27a10f082d138b202853862b1d4bc8
-      - destroy-environment   
+      - destroy-environment
+            
           
           
  
