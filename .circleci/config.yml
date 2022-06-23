@@ -139,11 +139,10 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws --region us-east-1 \
-            ec2 describe-instances \
-            --filters \
-            "Name=instance-state-name,Values=running" \
-            --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-            --output text >> inventory.txt
+            --ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .
           paths:
@@ -153,20 +152,25 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
             fingerprints: ["7d:27:a1:0f:08:2d:13:8b:20:28:53:86:2b:1d:4b:c8"]
+      - attach_workspace:
+          at: . 
+      - run: 
+          name: View content of inventory.txt
+          command: cat .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
             yum update -y
             yum install -y tar gzip
+            yum install awscli
             amazon-linux-extras install ansible2 -y
             yum install ansible
-      - attach_workspace:
-          at: .      
+           
       - run:
           name: Configure server
           command: |
