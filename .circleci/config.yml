@@ -11,7 +11,7 @@ commands:
       - run:
           name: Destroy environments
           command: |
-
+            aws s3 rm s3://"udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: << parameters.when_to_run >>
@@ -176,7 +176,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml \
+            --key-file ~/.ssh/id_rsa_7d27a10f082d138b202853862b1d4bc8
       - destroy-environment   
           
           
