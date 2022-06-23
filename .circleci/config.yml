@@ -145,9 +145,9 @@ jobs:
             --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
             --output text >> inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       - destroy-environment
 
   
@@ -166,7 +166,7 @@ jobs:
             amazon-linux-extras install ansible2 -y
             yum install ansible
       - attach_workspace:
-          at: ~/      
+          at: .git      
       - run:
           name: Configure server
           command: |
