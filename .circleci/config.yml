@@ -177,7 +177,7 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml \
             --key-file ~/.ssh/id_rsa_7d27a10f082d138b202853862b1d4bc8
       # Here's where you will add some code to rollback on failure
-     # - destroy-environment
+      - destroy-environment
           
             
           
