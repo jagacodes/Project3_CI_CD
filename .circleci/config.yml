@@ -252,8 +252,6 @@ jobs:
             yum install -y gcc-c++ make 
             curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash - 
             yum install -y nodejs 
-            apk add --update --no-cache  nodejs npm aws-cli python curl
-      - run:
           name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
