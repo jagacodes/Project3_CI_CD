@@ -242,7 +242,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum update -y
             yum upgrade -y
             yum install -ya curl 
             yum install -y tar gzip
@@ -251,8 +250,7 @@ jobs:
             yum install awscli -y
             yum install -y gcc-c++ make 
             curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash - 
-            yum install -y nodejs 
-
+            yum install -y nodejs
       - run:
           name: Get backend url
           command: |
@@ -295,7 +293,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache tar gzip ansible aws-cli
+            apk add --update --no-cache tar gzip aws-cli curl nodejs npm
       - run:
           name: Deploy backend
           command: |
