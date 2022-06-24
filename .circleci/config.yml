@@ -205,13 +205,13 @@ jobs:
   
   run-migrations:
     docker:
-      - image: circleci/node
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
       - run: 
           name: install dependencies
           command: |
-            apk add --update --no-cache tar gzip aws-cli curl
+            apk add --update --no-cache tar gzip aws-cli curl nodejs npm
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -252,7 +252,7 @@ jobs:
             yum install -y gcc-c++ make 
             curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash - 
             yum install -y nodejs 
-            
+
       - run:
           name: Get backend url
           command: |
