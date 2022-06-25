@@ -11,7 +11,6 @@ commands:
       - run:
           name: Destroy environments
           command: |
-            aws s3 rm s3://"udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: << parameters.when_to_run >>
@@ -239,11 +238,13 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
             yum upgrade -y
-            yum install -ya curl 
+            yum install -y curl 
             yum install -y tar gzip
             yum install python3.9 -y
             update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
@@ -272,6 +273,7 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
         # Here's where you will add some code to rollback on failure           
       - destroy-environment
+      - revert-migrations
 
 
   deploy-backend:
@@ -293,7 +295,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache tar gzip aws-cli curl nodejs npm
+            apk add --update --no-cache tar gzip aws-cli curl nodejs npm ansible
       - run:
           name: Deploy backend
           command: |
