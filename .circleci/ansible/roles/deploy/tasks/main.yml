@@ -10,12 +10,12 @@
 
 - name: remove unneeded deps
   become: true
-  apt:
+  yum:
     autoremove: yes
 
 - name: install deps
   become: true
-  apt:
+  yum:
     name: ['nodejs', 'npm']
     state: latest
     update_cache: yes
