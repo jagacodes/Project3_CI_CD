@@ -1,33 +1,33 @@
 ---
 
-
-- name: 'update and upgrade packages.'
+- name: "update yum packages."
   become: true
   yum:
-    upgrade: yes
     update_cache: yes
-    cache_valid_time: 86400
 
-- name: remove unneeded deps
+
+- name: "install NPM repo"
+  become: true
+  shell: curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+    
+
+- name: "install NPM dependencies."
   become: true
   yum:
-    autoremove: yes
-
-- name: install deps
-  become: true
-  yum:
-    name: ['nodejs', 'npm']
+    name: 
+      - nodejs
+      - gcc-c++
+      - make
     state: latest
     update_cache: yes
 
-
-- name: install pm2
+- name: "install pm2"
   become: true
   npm:
     name: pm2
     global: yes
-    state: latest
     production: yes
+    state: present
 
 
 - name: extract artifact
