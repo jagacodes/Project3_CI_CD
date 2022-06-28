@@ -3,7 +3,8 @@
 - name: 'update upgrade packages.'
   become: true
   yum:
-    upgrade: yes
+    update: yes
+    update_cache: yes
     
 
 - name: remove unneeded deps
