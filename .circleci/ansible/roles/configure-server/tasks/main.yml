@@ -3,7 +3,6 @@
 - name: 'update upgrade packages.'
   become: true
   yum:
-    update: yes
     update_cache: yes
     
 
